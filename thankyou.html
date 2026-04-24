@@ -1,20 +1,50 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>確認結果</title>
+<meta charset="UTF-8">
+<title>結果</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <h1>セキュリティ訓練です</h1>
-  <p>このページはフィッシング対策の体験です。</p>
 
-  <h2>注意点</h2>
-  <ul>
-    <li>不審なURLはクリックしない</li>
-    <li>パスワードを入力する前に確認する</li>
-    <li>送信元を必ずチェックする</li>
-  </ul>
+<div class="container">
 
-  <p>ご協力ありがとうございました。</p>
+<h1>セキュリティ体験結果</h1>
+
+<p id="result"></p>
+
+<h2>これは訓練です</h2>
+
+<p>
+今回の操作は、実際のサポート詐欺でよく使われる手口です。<br>
+不審な警告画面には注意してください。
+</p>
+
+<ul style="text-align:left;">
+<li>突然の警告画面は疑う</li>
+<li>電話やリンクを安易にクリックしない</li>
+<li>困ったら社内担当者へ相談</li>
+</ul>
+
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const count = params.get("count") || 0;
+
+let message = "";
+
+if (count == 0) {
+    message = "素晴らしいです！危険な操作は行いませんでした。";
+} else if (count == 1) {
+    message = "1回クリックしました。注意が必要です。";
+} else {
+    message = count + "回クリックしています。非常に危険な状態です。";
+}
+
+document.getElementById("result").innerText = message;
+</script>
+
 </body>
 </html>
