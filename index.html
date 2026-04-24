@@ -1,28 +1,81 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>サインイン</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>セキュリティ体験</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <h2>サインイン</h2>
+<div class="container">
+    <h2>⚠ セキュリティ警告</h2>
+    <p>お使いのPCで問題が検出されました</p>
+    <button class="button" onclick="countClick()">サポートに連絡</button>
+</div>
 
-  <form action="thankyou.html">
-    <div>
-      <label>メールアドレス</label><br>
-      <input type="email" name="email" required>
-    </div>
+<div id="popup" class="popup">
+  <div class="popup-box" id="popupContent">
+    <h3>セキュリティ体験</h3>
+    <p>これから実際の攻撃を想定した体験を行います</p>
+    <button onclick="start()">開始</button>
+  </div>
+</div>
 
-    <div>
-      <label>パスワード</label><br>
-      <input type="password" name="password" required>
-    </div>
+<div id="timer">残り: 20秒</div>
 
-    <br>
-    <button type="submit">ログイン</button>
-  </form>
+<script>
+let clickCount = 0;
+let timeLeft = 20;
+
+// ユーザー識別
+const params = new URLSearchParams(location.search);
+const user = params.get("user") || "unknown";
+
+// 開始
+function start() {
+    document.getElementById("popup").style.display = "none";
+    document.getElementById("timer").style.display = "block";
+    startTimer();
+}
+
+// タイマー
+function startTimer() {
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = "残り: " + timeLeft + "秒";
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            end();
+        }
+    }, 1000);
+}
+
+// クリック検知
+function countClick() {
+    clickCount++;
+    alert("⚠ この操作は危険です！");
+}
+
+// 終了
+function end() {
+    sendToGoogleForm();
+    location.href = "thankyou.html?count=" + clickCount + "&user=" + user;
+}
+
+// Googleフォーム送信
+function sendToGoogleForm() {
+    const url =
+        "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse"
+        + "?entry.383079770=" + encodeURIComponent(user)
+        + "&entry.1264499515=" + encodeURIComponent(clickCount > 0 ? "はい" : "いいえ")
+        + "&entry.1360374708=" + encodeURIComponent(clickCount > 1 ? "はい" : "いいえ")
+        + "&entry.267554255=" + encodeURIComponent(clickCount);
+
+    new Image().src = url;
+}
+</script>
 
 </body>
 </html>
