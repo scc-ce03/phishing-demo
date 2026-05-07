@@ -10,71 +10,157 @@
 
 <div class="container">
     <h2>⚠ セキュリティ警告</h2>
+
+    <p id="companyName"></p>
+
     <p>お使いのPCで問題が検出されました</p>
-    <button class="button" onclick="countClick()">サポートに連絡</button>
+
+    <button class="button" onclick="countClick('support')">
+        サポートに連絡
+    </button>
 </div>
 
+<!-- 開始ポップアップ -->
 <div id="popup" class="popup">
   <div class="popup-box" id="popupContent">
     <h3>セキュリティ体験</h3>
-    <p>これから実際の攻撃を想定した体験を行います</p>
+
+    <p>
+      実際のサポート詐欺を想定した
+      セキュリティ体験を行います
+    </p>
+
     <button onclick="start()">開始</button>
   </div>
 </div>
 
-<div id="timer">残り: 20秒</div>
+<!-- タイマー -->
+<div id="timerBox">
+
+    <button id="closeBtn"
+        onclick="countClick('close')">
+        ✕
+    </button>
+
+    <div id="timer">
+        残り: 20秒
+    </div>
+
+</div>
 
 <script>
+
 let clickCount = 0;
+let supportClicks = 0;
+let closeClicks = 0;
+
 let timeLeft = 20;
 
-// ユーザー識別
+// URLパラメータ
 const params = new URLSearchParams(location.search);
-const user = params.get("user") || "unknown";
+
+const user =
+    params.get("user") || "unknown";
+
+const company =
+    params.get("company") || "セキュリティ訓練";
+
+// 会社名表示
+document.getElementById("companyName").innerText =
+    company + " システム監視センター";
 
 // 開始
 function start() {
+
+    // フルスクリーン
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+    }
+
     document.getElementById("popup").style.display = "none";
-    document.getElementById("timer").style.display = "block";
+
+    document.getElementById("timerBox").style.display = "block";
+
     startTimer();
 }
 
 // タイマー
 function startTimer() {
+
     const timer = setInterval(() => {
+
         timeLeft--;
-        document.getElementById("timer").innerText = "残り: " + timeLeft + "秒";
+
+        document.getElementById("timer").innerText =
+            "残り: " + timeLeft + "秒";
 
         if (timeLeft <= 0) {
+
             clearInterval(timer);
+
             end();
         }
+
     }, 1000);
 }
 
 // クリック検知
-function countClick() {
+function countClick(type) {
+
     clickCount++;
-    alert("⚠ この操作は危険です！");
+
+    if (type === "support") {
+        supportClicks++;
+    }
+
+    if (type === "close") {
+        closeClicks++;
+
+        alert("⚠ 問題は解決されていません！");
+    }
+
 }
 
 // 終了
 function end() {
+
     sendToGoogleForm();
-    location.href = "thankyou.html?count=" + clickCount + "&user=" + user;
+
+    // フルスクリーン解除
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+
+    location.href =
+        "thankyou.html"
+        + "?count=" + clickCount
+        + "&support=" + supportClicks
+        + "&close=" + closeClicks
+        + "&user=" + encodeURIComponent(user)
+        + "&company=" + encodeURIComponent(company);
 }
 
 // Googleフォーム送信
 function sendToGoogleForm() {
+
     const url =
         "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse"
-        + "?entry.383079770=" + encodeURIComponent(user)
-        + "&entry.1264499515=" + encodeURIComponent(clickCount > 0 ? "はい" : "いいえ")
-        + "&entry.1360374708=" + encodeURIComponent(clickCount > 1 ? "はい" : "いいえ")
-        + "&entry.267554255=" + encodeURIComponent(clickCount);
+
+        + "?entry.383079770="
+        + encodeURIComponent(user)
+
+        + "&entry.1264499515="
+        + encodeURIComponent(clickCount > 0 ? "はい" : "いいえ")
+
+        + "&entry.1360374708="
+        + encodeURIComponent(clickCount > 1 ? "はい" : "いいえ")
+
+        + "&entry.267554255="
+        + encodeURIComponent(clickCount);
 
     new Image().src = url;
 }
+
 </script>
 
 </body>
