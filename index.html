@@ -9,20 +9,25 @@
 <body>
 
 <div class="container">
+
     <h2>⚠ セキュリティ警告</h2>
 
     <p id="companyName"></p>
 
     <p>お使いのPCで問題が検出されました</p>
 
-    <button class="button" onclick="countClick('support')">
+    <button class="button"
+        onclick="countClick('support')">
         サポートに連絡
     </button>
+
 </div>
 
 <!-- 開始ポップアップ -->
 <div id="popup" class="popup">
-  <div class="popup-box" id="popupContent">
+
+  <div class="popup-box">
+
     <h3>セキュリティ体験</h3>
 
     <p>
@@ -30,23 +35,31 @@
       セキュリティ体験を行います
     </p>
 
-    <button onclick="start()">開始</button>
+    <button onclick="start()">
+      開始
+    </button>
+
   </div>
+
 </div>
 
 <!-- タイマー -->
 <div id="timerBox">
 
-    <button id="closeBtn"
-        onclick="countClick('close')">
+    <!-- 偽閉じるボタン -->
+    <div id="closeBtn"
+         onclick="fakeClose(event)">
         ✕
-    </button>
+    </div>
 
     <div id="timer">
         残り: 20秒
     </div>
 
 </div>
+
+<!-- 警告メッセージ -->
+<div id="warningMessage"></div>
 
 <script>
 
@@ -77,9 +90,13 @@ function start() {
         document.documentElement.requestFullscreen();
     }
 
-    document.getElementById("popup").style.display = "none";
+    document.getElementById("popup").style.display =
+        "none";
 
-    document.getElementById("timerBox").style.display = "block";
+    document.getElementById("timerBox").style.display =
+        "block";
+
+    document.body.style.cursor = "wait";
 
     startTimer();
 }
@@ -104,7 +121,7 @@ function startTimer() {
     }, 1000);
 }
 
-// クリック検知
+// サポートボタン
 function countClick(type) {
 
     clickCount++;
@@ -113,18 +130,48 @@ function countClick(type) {
         supportClicks++;
     }
 
-    if (type === "close") {
-        closeClicks++;
+    showWarning(
+        "⚠ この操作は危険です！"
+    );
+}
 
-        alert("⚠ 問題は解決されていません！");
-    }
+// 偽閉じるボタン
+function fakeClose(event) {
 
+    event.preventDefault();
+
+    clickCount++;
+
+    closeClicks++;
+
+    showWarning(
+        "⚠ セキュリティ保護が実行中です"
+    );
+}
+
+// 警告表示
+function showWarning(message) {
+
+    const msg =
+        document.getElementById("warningMessage");
+
+    msg.innerText = message;
+
+    msg.style.display = "block";
+
+    setTimeout(() => {
+
+        msg.style.display = "none";
+
+    }, 2000);
 }
 
 // 終了
 function end() {
 
     sendToGoogleForm();
+
+    document.body.style.cursor = "default";
 
     // フルスクリーン解除
     if (document.fullscreenElement) {
