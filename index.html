@@ -16,8 +16,7 @@
 
     <p>お使いのPCで問題が検出されました</p>
 
-    <button class="button"
-        onclick="countClick('support')">
+    <button class="button" onclick="countClick('support')">
         サポートに連絡
     </button>
 
@@ -25,40 +24,20 @@
 
 <!-- 開始ポップアップ -->
 <div id="popup" class="popup">
-
   <div class="popup-box">
-
     <h3>セキュリティ体験</h3>
-
-    <p>
-      実際のサポート詐欺を想定した
-      セキュリティ体験を行います
-    </p>
-
-    <button onclick="start()">
-      開始
-    </button>
-
+    <p>実際のサポート詐欺を想定したセキュリティ体験を行います</p>
+    <button onclick="start()">開始</button>
   </div>
-
 </div>
 
 <!-- タイマー -->
 <div id="timerBox">
-
-    <!-- 偽閉じるボタン -->
-    <div id="closeBtn"
-         onclick="fakeClose(event)">
-        ✕
-    </div>
-
-    <div id="timer">
-        残り: 20秒
-    </div>
-
+    <div id="closeBtn" onclick="fakeClose(event)">✕</div>
+    <div id="timer">残り: 20秒</div>
 </div>
 
-<!-- 警告メッセージ -->
+<!-- 警告 -->
 <div id="warningMessage"></div>
 
 <script>
@@ -66,36 +45,25 @@
 let clickCount = 0;
 let supportClicks = 0;
 let closeClicks = 0;
-
 let timeLeft = 20;
 
 // URLパラメータ
 const params = new URLSearchParams(location.search);
+const user = params.get("user") || "unknown";
+const company = params.get("company") || "セキュリティ訓練";
 
-const user =
-    params.get("user") || "unknown";
-
-const company =
-    params.get("company") || "セキュリティ訓練";
-
-// 会社名表示
 document.getElementById("companyName").innerText =
     company + " システム監視センター";
 
 // 開始
 function start() {
 
-    // フルスクリーン
     if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
     }
 
-    document.getElementById("popup").style.display =
-        "none";
-
-    document.getElementById("timerBox").style.display =
-        "block";
-
+    document.getElementById("popup").style.display = "none";
+    document.getElementById("timerBox").style.display = "block";
     document.body.style.cursor = "wait";
 
     startTimer();
@@ -112,9 +80,7 @@ function startTimer() {
             "残り: " + timeLeft + "秒";
 
         if (timeLeft <= 0) {
-
             clearInterval(timer);
-
             end();
         }
 
@@ -130,39 +96,29 @@ function countClick(type) {
         supportClicks++;
     }
 
-    showWarning(
-        "⚠ この操作は危険です！"
-    );
+    showWarning("⚠ この操作は危険です！");
 }
 
-// 偽閉じるボタン
+// 閉じる
 function fakeClose(event) {
 
     event.preventDefault();
 
     clickCount++;
-
     closeClicks++;
 
-    showWarning(
-        "⚠ セキュリティ保護が実行中です"
-    );
+    showWarning("⚠ セキュリティ保護が実行中です");
 }
 
-// 警告表示
+// 警告
 function showWarning(message) {
 
-    const msg =
-        document.getElementById("warningMessage");
-
+    const msg = document.getElementById("warningMessage");
     msg.innerText = message;
-
     msg.style.display = "block";
 
     setTimeout(() => {
-
         msg.style.display = "none";
-
     }, 2000);
 }
 
@@ -173,7 +129,6 @@ function end() {
 
     document.body.style.cursor = "default";
 
-    // フルスクリーン解除
     if (document.fullscreenElement) {
         document.exitFullscreen();
     }
@@ -187,25 +142,26 @@ function end() {
         + "&company=" + encodeURIComponent(company);
 }
 
-// Googleフォーム送信
+// ★修正版Googleフォーム送信（重要）
 function sendToGoogleForm() {
 
     const url =
-        "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse"
+        "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse";
 
-        + "?entry.383079770="
-        + encodeURIComponent(user)
+    const formData = new FormData();
 
-        + "&entry.1264499515="
-        + encodeURIComponent(clickCount > 0 ? "はい" : "いいえ")
+    formData.append("entry.383079770", user);
 
-        + "&entry.1360374708="
-        + encodeURIComponent(clickCount > 1 ? "はい" : "いいえ")
+    // 行動ログ（簡略化して安定優先）
+    formData.append("entry.1264499515", supportClicks > 0 ? "気づいた" : "気づかない");
+    formData.append("entry.418393278", closeClicks > 0 ? "操作あり" : "なし");
+    formData.append("entry.267554255", String(clickCount));
 
-        + "&entry.267554255="
-        + encodeURIComponent(clickCount);
-
-    new Image().src = url;
+    fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+    });
 }
 
 </script>
