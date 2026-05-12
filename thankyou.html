@@ -27,11 +27,65 @@
 <li>困ったら社内担当者へ相談</li>
 </ul>
 
+<hr>
+
+<h2>アンケート</h2>
+
+<!-- 質問① -->
+<h3>① メールのリンクをクリックした理由</h3>
+
+<label><input type="checkbox" name="mailReason" value="本物のメールだと思った"> 本物のメールだと思った</label><br>
+<label><input type="checkbox" name="mailReason" value="業務連絡だと思った"> 業務連絡だと思った</label><br>
+<label><input type="checkbox" name="mailReason" value="差出人を信用した"> 差出人を信用した</label><br>
+<label><input type="checkbox" name="mailReason" value="急ぎだと思った"> 急ぎだと思った</label><br>
+<label><input type="checkbox" name="mailReason" value="深く考えず押した"> 深く考えず押した</label><br>
+<label><input type="checkbox" name="mailReason" value="興味を持った"> 興味を持った</label><br>
+
+<hr>
+
+<!-- 質問② -->
+<h3>② サイト内のボタンをクリックした理由</h3>
+
+<label><input type="checkbox" name="siteReason" value="警告表示に焦った"> 警告表示に焦った</label><br>
+<label><input type="checkbox" name="siteReason" value="本物の警告だと思った"> 本物の警告だと思った</label><br>
+<label><input type="checkbox" name="siteReason" value="閉じ方が分からなかった"> 閉じ方が分からなかった</label><br>
+<label><input type="checkbox" name="siteReason" value="サポートへ連絡が必要と思った"> サポートへ連絡が必要と思った</label><br>
+<label><input type="checkbox" name="siteReason" value="不安になった"> 不安になった</label><br>
+
+<hr>
+
+<!-- 質問③ -->
+<h3>③ フィッシングサイトへアクセスした際の初動対応を知っていますか？</h3>
+
+<label><input type="radio" name="initial" value="はい"> はい</label><br>
+<label><input type="radio" name="initial" value="いいえ"> いいえ</label><br>
+
+<div id="initialDetail" style="display:none; margin-top:15px;">
+
+<h3>③-2 初動対応としてどの対応が必要ですか？</h3>
+
+<label><input type="checkbox" name="initialDetail" value="ネットワーク切断"> ネットワーク切断</label><br>
+<label><input type="checkbox" name="initialDetail" value="セキュリティソフト確認"> セキュリティソフト確認</label><br>
+<label><input type="checkbox" name="initialDetail" value="管理者への報告"> 管理者への報告</label><br>
+<label><input type="checkbox" name="initialDetail" value="PC隔離"> PC隔離</label><br>
+<label><input type="checkbox" name="initialDetail" value="通信確認"> 通信確認</label><br>
+
+</div>
+
+<hr>
+
+<button class="button" onclick="sendForm()">送信</button>
+
+<p id="completeMessage"></p>
+
 </div>
 
 <script>
+
 const params = new URLSearchParams(location.search);
+
 const count = params.get("count") || 0;
+const user = params.get("user") || "unknown";
 
 let message = "";
 
@@ -44,6 +98,65 @@ if (count == 0) {
 }
 
 document.getElementById("result").innerText = message;
+
+//
+// 初動対応分岐
+//
+
+document.querySelectorAll('input[name="initial"]').forEach(radio => {
+
+    radio.addEventListener("change", function() {
+
+        if (this.value === "いいえ") {
+            document.getElementById("initialDetail").style.display = "block";
+        } else {
+            document.getElementById("initialDetail").style.display = "none";
+        }
+
+    });
+
+});
+
+//
+// Googleフォーム送信
+//
+
+function sendForm() {
+
+    const mailReason =
+        [...document.querySelectorAll('input[name="mailReason"]:checked')]
+        .map(e => e.value)
+        .join(",");
+
+    const siteReason =
+        [...document.querySelectorAll('input[name="siteReason"]:checked')]
+        .map(e => e.value)
+        .join(",");
+
+    const initial =
+        document.querySelector('input[name="initial"]:checked')?.value || "";
+
+    const initialDetail =
+        [...document.querySelectorAll('input[name="initialDetail"]:checked')]
+        .map(e => e.value)
+        .join(",");
+
+    const url =
+        "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse"
+        + "?entry.383079770=" + encodeURIComponent(user)
+        + "&entry.1264499515=" + encodeURIComponent(mailReason)
+        + "&entry.418393278=" + encodeURIComponent(siteReason)
+        + "&entry.1360374708=" + encodeURIComponent(initial)
+        + "&entry.457904848=" + encodeURIComponent(initialDetail)
+        + "&entry.267554255=" + encodeURIComponent(count);
+
+    new Image().src = url;
+
+    document.getElementById("completeMessage").innerText =
+        "アンケートを送信しました。";
+
+}
+
 </script>
 
 </body>
