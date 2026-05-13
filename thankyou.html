@@ -126,48 +126,43 @@ document.querySelectorAll('input[name="initial"]').forEach(radio => {
 
 function sendForm() {
 
-    const mailReason =
-        [...document.querySelectorAll('input[name="mailReason"]:checked')]
-        .map(e =>
-            "&entry.1264499515=" + encodeURIComponent(e.value)
-        )
-        .join("");
+    const base =
+        "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse";
 
-    const siteReason =
-        [...document.querySelectorAll('input[name="siteReason"]:checked')]
-        .map(e =>
-            "&entry.418393278=" + encodeURIComponent(e.value)
-        )
-        .join("");
+    // ■ チェックボックス（安全化：1フィールド化）
+    const mailReason = [...document.querySelectorAll('input[name="mailReason"]:checked')]
+        .map(e => e.value)
+        .join(" / ");
 
-    const initial =
-        document.querySelector('input[name="initial"]:checked')?.value || "";
+    const siteReason = [...document.querySelectorAll('input[name="siteReason"]:checked')]
+        .map(e => e.value)
+        .join(" / ");
 
-    const initialDetail =
-        [...document.querySelectorAll('input[name="initialDetail"]:checked')]
-        .map(e =>
-            "&entry.457904848=" + encodeURIComponent(e.value)
-        )
-        .join("");
+    const initial = document.querySelector('input[name="initial"]:checked')?.value || "";
 
+    const initialDetail = [...document.querySelectorAll('input[name="initialDetail"]:checked')]
+        .map(e => e.value)
+        .join(" / ");
+
+    // ■ URL（entryは1回ずつだけ）
     const url =
-        "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse"
+        base
         + "?entry.383079770=" + encodeURIComponent(user)
-        + mailReason
-        + siteReason
+        + "&entry.1264499515=" + encodeURIComponent(mailReason)
+        + "&entry.418393278=" + encodeURIComponent(siteReason)
         + "&entry.1360374708=" + encodeURIComponent(initial)
-        + initialDetail
+        + "&entry.457904848=" + encodeURIComponent(initialDetail)
         + "&entry.267554255=" + encodeURIComponent(count);
 
+    // ■ 送信
     new Image().src = url;
 
     document.getElementById("completeMessage").innerText =
         "アンケートを送信しました。";
 
     document.getElementById("sendButton").disabled = true;
-
-    document.getElementById("sendButton").innerText =
-        "送信完了";
+    document.getElementById("sendButton").innerText = "送信完了";
+}
 
 }
 
