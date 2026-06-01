@@ -63,7 +63,9 @@
 
 <div id="initialDetail" style="display:none; margin-top:15px;">
 
-<h3>③-2 初動対応としてどの対応が必要ですか？</h3>
+<h3 id="initialDetailTitle">
+③-2 初動対応としてどの対応が必要ですか？
+</h3>
 
 <label><input type="checkbox" name="initialDetail" value="ネットワーク切断"> ネットワーク切断</label><br>
 <label><input type="checkbox" name="initialDetail" value="セキュリティソフト確認"> セキュリティソフト確認</label><br>
@@ -110,16 +112,30 @@ document.querySelectorAll('input[name="initial"]').forEach(radio => {
 
     radio.addEventListener("change", function() {
 
-        if (this.value === "いいえ") {
-            document.getElementById("initialDetail").style.display = "block";
+        const detail =
+            document.getElementById("initialDetail");
+
+        const title =
+            document.getElementById("initialDetailTitle");
+
+        // はい・いいえどちらでも表示
+        detail.style.display = "block";
+
+        if (this.value === "はい") {
+
+            title.innerText =
+                "③-2 あなたが考える初動対応を選択してください";
+
         } else {
-            document.getElementById("initialDetail").style.display = "none";
+
+            title.innerText =
+                "③-2 初動対応として必要だと思うものを選択してください";
+
         }
 
     });
 
 });
-
 //
 // Googleフォーム送信
 //
