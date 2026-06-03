@@ -145,7 +145,6 @@ function sendForm() {
     const base =
         "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse";
 
-    // ■ チェックボックス（安全化：1フィールド化）
     const mailReason = [...document.querySelectorAll('input[name="mailReason"]:checked')]
         .map(e => e.value)
         .join(" / ");
@@ -154,24 +153,27 @@ function sendForm() {
         .map(e => e.value)
         .join(" / ");
 
-    const initial = document.querySelector('input[name="initial"]:checked')?.value || "";
+    const initial =
+        document.querySelector('input[name="initial"]:checked')?.value || "";
 
     const initialDetail = [...document.querySelectorAll('input[name="initialDetail"]:checked')]
         .map(e => e.value)
         .join(" / ");
 
-    // ■ URL（entryは1回ずつだけ）
-    const url =
-        base
-        + "?entry.383079770=" + encodeURIComponent(user)
-        + "&entry.1264499515=" + encodeURIComponent(mailReason)
-        + "&entry.418393278=" + encodeURIComponent(siteReason)
-        + "&entry.1360374708=" + encodeURIComponent(initial)
-        + "&entry.457904848=" + encodeURIComponent(initialDetail)
-        + "&entry.267554255=" + encodeURIComponent(count);
+    const formData = new FormData();
 
-    // ■ 送信
-    new Image().src = url;
+    formData.append("entry.383079770", user);
+    formData.append("entry.1264499515", mailReason);
+    formData.append("entry.418393278", siteReason);
+    formData.append("entry.1360374708", initial);
+    formData.append("entry.457904848", initialDetail);
+    formData.append("entry.267554255", count);
+
+    fetch(base, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+    });
 
     document.getElementById("completeMessage").innerText =
         "アンケートを送信しました。";
@@ -179,9 +181,3 @@ function sendForm() {
     document.getElementById("sendButton").disabled = true;
     document.getElementById("sendButton").innerText = "送信完了";
 }
-
-
-</script>
-
-</body>
-</html>
