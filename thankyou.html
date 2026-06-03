@@ -112,25 +112,15 @@ document.querySelectorAll('input[name="initial"]').forEach(radio => {
 
     radio.addEventListener("change", function() {
 
-        const detail =
-            document.getElementById("initialDetail");
+        const detail = document.getElementById("initialDetail");
+        const title = document.getElementById("initialDetailTitle");
 
-        const title =
-            document.getElementById("initialDetailTitle");
-
-        // はい・いいえどちらでも表示
         detail.style.display = "block";
 
         if (this.value === "はい") {
-
-            title.innerText =
-                "③-2 あなたが考える初動対応を選択してください";
-
+            title.innerText = "③-2 あなたが考える初動対応を選択してください";
         } else {
-
-            title.innerText =
-                "③-2 初動対応として必要だと思うものを選択してください";
-
+            title.innerText = "③-2 初動対応として必要だと思うものを選択してください";
         }
 
     });
