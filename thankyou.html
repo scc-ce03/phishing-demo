@@ -23,7 +23,7 @@
 </p>
 
 <ul style="text-align:left;">
-<li>突然の警告画面は疑う</li>
+<li>突然の警告画面を疑う</li>
 <li>電話やリンクを安易にクリックしない</li>
 <li>困ったら社内担当者へ相談</li>
 </ul>
@@ -61,10 +61,10 @@
 <label><input type="radio" name="initial" value="はい"> はい</label><br>
 <label><input type="radio" name="initial" value="いいえ"> いいえ</label><br>
 
-<div id="initialDetail" style="display:none; margin-top:15px;">
+<div id="initialDetail" style="display:block; margin-top:15px;">
 
 <h3 id="initialDetailTitle">
-③-2 初動対応としてどの対応が必要ですか？
+③-2 初動対応として必要だと思うものを選択してください
 </h3>
 
 <label><input type="checkbox" name="initialDetail" value="ネットワーク切断"> ネットワーク切断</label><br>
@@ -104,32 +104,6 @@ if (count == 0) {
 
 document.getElementById("result").innerText = message;
 
-//
-// 初動対応分岐
-//
-
-document.querySelectorAll('input[name="initial"]').forEach(radio => {
-
-    radio.addEventListener("change", function() {
-
-        const detail = document.getElementById("initialDetail");
-        const title = document.getElementById("initialDetailTitle");
-
-        detail.style.display = "block";
-
-        if (this.value === "はい") {
-            title.innerText = "③-2 あなたが考える初動対応を選択してください";
-        } else {
-            title.innerText = "③-2 初動対応として必要だと思うものを選択してください";
-        }
-
-    });
-
-});
-//
-// Googleフォーム送信
-//
-
 function sendForm() {
 
     const base =
@@ -152,12 +126,12 @@ function sendForm() {
 
     const formData = new FormData();
 
-    formData.append("entry.350359772", user);        // 氏名
-    formData.append("entry.1423169219", mailReason); // メールリンク理由
-    formData.append("entry.1233368270", siteReason); // サイトボタン理由
-    formData.append("entry.308899109", initial);     // 初動対応はい/いいえ
-    formData.append("entry.2022759034", initialDetail); // 初動対応詳細
-    formData.append("entry.1457355382", count);      // クリック回数
+    formData.append("entry.350359772", user);
+    formData.append("entry.1423169219", mailReason);
+    formData.append("entry.1233368270", siteReason);
+    formData.append("entry.308899109", initial);
+    formData.append("entry.2022759034", initialDetail);
+    formData.append("entry.1457355382", count);
 
     fetch(base, {
         method: "POST",
@@ -171,3 +145,8 @@ function sendForm() {
     document.getElementById("sendButton").disabled = true;
     document.getElementById("sendButton").innerText = "送信完了";
 }
+
+</script>
+
+</body>
+</html>
