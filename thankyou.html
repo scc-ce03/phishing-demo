@@ -143,7 +143,7 @@ document.querySelectorAll('input[name="initial"]').forEach(radio => {
 function sendForm() {
 
     const base =
-        "https://docs.google.com/forms/d/e/1FAIpQLSd4gqwmC5wCvN0CbHIAZ9qf2dla1ye6W6tW3vOHWrQ3ThNzcw/formResponse";
+        "https://docs.google.com/forms/d/e/1FAIpQLSf25vFXmC1jTMG_bNz5ZBWn9EtIB4E3yEZ9owXyuqZ_N4phQw/formResponse";
 
     const mailReason = [...document.querySelectorAll('input[name="mailReason"]:checked')]
         .map(e => e.value)
@@ -162,12 +162,12 @@ function sendForm() {
 
     const formData = new FormData();
 
-    formData.append("entry.383079770", user);
-    formData.append("entry.1264499515", mailReason);
-    formData.append("entry.418393278", siteReason);
-    formData.append("entry.1360374708", initial);
-    formData.append("entry.457904848", initialDetail);
-    formData.append("entry.267554255", count);
+    formData.append("entry.350359772", user);        // 氏名
+    formData.append("entry.1423169219", mailReason); // メールリンク理由
+    formData.append("entry.1233368270", siteReason); // サイトボタン理由
+    formData.append("entry.308899109", initial);     // 初動対応はい/いいえ
+    formData.append("entry.2022759034", initialDetail); // 初動対応詳細
+    formData.append("entry.1457355382", count);      // クリック回数
 
     fetch(base, {
         method: "POST",
