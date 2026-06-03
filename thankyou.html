@@ -109,28 +109,31 @@ function sendForm() {
     const base =
         "https://docs.google.com/forms/d/e/1FAIpQLSf25vFXmC1jTMG_bNz5ZBWn9EtIB4E3yEZ9owXyuqZ_N4phQw/formResponse";
 
-    const mailReason = [...document.querySelectorAll('input[name="mailReason"]:checked')]
-        .map(e => e.value)
-        .join(" / ");
-
-    const siteReason = [...document.querySelectorAll('input[name="siteReason"]:checked')]
-        .map(e => e.value)
-        .join(" / ");
-
     const initial =
         document.querySelector('input[name="initial"]:checked')?.value || "";
-
-    const initialDetail = [...document.querySelectorAll('input[name="initialDetail"]:checked')]
-        .map(e => e.value)
-        .join(" / ");
 
     const formData = new FormData();
 
     formData.append("entry.350359772", user);
-    formData.append("entry.1423169219", mailReason);
-    formData.append("entry.1233368270", siteReason);
+
+    // 複数回答①
+    document.querySelectorAll('input[name="mailReason"]:checked').forEach(e => {
+        formData.append("entry.1423169219", e.value);
+    });
+
+    // 複数回答②
+    document.querySelectorAll('input[name="siteReason"]:checked').forEach(e => {
+        formData.append("entry.1233368270", e.value);
+    });
+
+    // 単一回答③
     formData.append("entry.308899109", initial);
-    formData.append("entry.2022759034", initialDetail);
+
+    // 複数回答③-2
+    document.querySelectorAll('input[name="initialDetail"]:checked').forEach(e => {
+        formData.append("entry.2022759034", e.value);
+    });
+
     formData.append("entry.1457355382", count);
 
     fetch(base, {
@@ -145,7 +148,6 @@ function sendForm() {
     document.getElementById("sendButton").disabled = true;
     document.getElementById("sendButton").innerText = "送信完了";
 }
-
 </script>
 
 </body>
