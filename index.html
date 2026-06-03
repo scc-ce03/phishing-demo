@@ -145,18 +145,15 @@ function end() {
 // ★修正版Googleフォーム送信（重要）
 function sendToGoogleForm() {
     const base =
-    "https://docs.google.com/forms/d/e/1FAIpQLSf25vFXmC1jTMG_bNz5ZBWn9EtIB4E3yEZ9owXyuqZ_N4phQw/formResponse";
+        "https://docs.google.com/forms/d/e/1FAIpQLSf25vFXmC1jTMG_bNz5ZBWn9EtIB4E3yEZ9owXyuqZ_N4phQw/formResponse";
 
     const formData = new FormData();
-
-    formData.append("entry.383079770", user);
-
-    // 行動ログ（簡略化して安定優先）
+    formData.append("entry.350359772", user);        // ← 修正
     formData.append("entry.1423169219", supportClicks > 0 ? "気づいた" : "気づかない");
     formData.append("entry.1233368270", closeClicks > 0 ? "操作あり" : "なし");
     formData.append("entry.1457355382", String(clickCount));
 
-    fetch(url, {
+    fetch(base, {                                    // ← 修正
         method: "POST",
         mode: "no-cors",
         body: formData
