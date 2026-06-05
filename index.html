@@ -5,23 +5,15 @@
 <title>セキュリティ体験</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="container">
-
     <h2>⚠ セキュリティ警告</h2>
-
     <p id="companyName"></p>
-
     <p>お使いのPCで問題が検出されました</p>
-
     <button class="button" onclick="countClick('support')">
         サポートに連絡
     </button>
-
 </div>
-
 <!-- 開始ポップアップ -->
 <div id="popup" class="popup">
   <div class="popup-box">
@@ -30,18 +22,14 @@
     <button onclick="start()">開始</button>
   </div>
 </div>
-
 <!-- タイマー -->
 <div id="timerBox">
     <div id="closeBtn" onclick="fakeClose(event)">✕</div>
     <div id="timer">残り: 20秒</div>
 </div>
-
 <!-- 警告 -->
 <div id="warningMessage"></div>
-
 <script>
-
 let clickCount = 0;
 let supportClicks = 0;
 let closeClicks = 0;
@@ -51,88 +39,76 @@ let timeLeft = 20;
 const params = new URLSearchParams(location.search);
 const user = params.get("user") || "unknown";
 const company = params.get("company") || "セキュリティ訓練";
-
 document.getElementById("companyName").innerText =
     company + " システム監視センター";
 
+// ★追加：ページ読み込み時に即座にアクセス記録
+window.addEventListener("load", function() {
+    const accessUrl =
+        "https://docs.google.com/forms/d/e/1FAIpQLSf25vFXmC1jTMG_bNz5ZBWn9EtIB4E3yEZ9owXyuqZ_N4phQw/formResponse";
+    const accessData = new FormData();
+    accessData.append("entry.350359772", user);
+    accessData.append("entry.1457355382", "アクセス記録");
+    fetch(accessUrl, {
+        method: "POST",
+        mode: "no-cors",
+        body: accessData
+    });
+});
+
 // 開始
 function start() {
-
     if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
     }
-
     document.getElementById("popup").style.display = "none";
     document.getElementById("timerBox").style.display = "block";
     document.body.style.cursor = "wait";
-
     startTimer();
 }
-
 // タイマー
 function startTimer() {
-
     const timer = setInterval(() => {
-
         timeLeft--;
-
         document.getElementById("timer").innerText =
             "残り: " + timeLeft + "秒";
-
         if (timeLeft <= 0) {
             clearInterval(timer);
             end();
         }
-
     }, 1000);
 }
-
 // サポートボタン
 function countClick(type) {
-
     clickCount++;
-
     if (type === "support") {
         supportClicks++;
     }
-
     showWarning("⚠ この操作は危険です！");
 }
-
 // 閉じる
 function fakeClose(event) {
-
     event.preventDefault();
-
     clickCount++;
     closeClicks++;
-
     showWarning("⚠ セキュリティ保護が実行中です");
 }
-
 // 警告
 function showWarning(message) {
-
     const msg = document.getElementById("warningMessage");
     msg.innerText = message;
     msg.style.display = "block";
-
     setTimeout(() => {
         msg.style.display = "none";
     }, 2000);
 }
-
 // 終了
 function end() {
-
     sendToGoogleForm();
-
     document.body.style.cursor = "default";
-
     if (document.fullscreenElement) {
         document.exitFullscreen();
     }
-
     location.href =
         "thankyou.html"
         + "?count=" + clickCount
@@ -141,26 +117,21 @@ function end() {
         + "&user=" + encodeURIComponent(user)
         + "&company=" + encodeURIComponent(company);
 }
-
-// ★修正版Googleフォーム送信（重要）
+// Googleフォーム送信
 function sendToGoogleForm() {
     const base =
         "https://docs.google.com/forms/d/e/1FAIpQLSf25vFXmC1jTMG_bNz5ZBWn9EtIB4E3yEZ9owXyuqZ_N4phQw/formResponse";
-
     const formData = new FormData();
-    formData.append("entry.350359772", user);        // ← 修正
+    formData.append("entry.350359772", user);
     formData.append("entry.1423169219", supportClicks > 0 ? "気づいた" : "気づかない");
     formData.append("entry.1233368270", closeClicks > 0 ? "操作あり" : "なし");
     formData.append("entry.1457355382", String(clickCount));
-
-    fetch(base, {                                    // ← 修正
+    fetch(base, {
         method: "POST",
         mode: "no-cors",
         body: formData
     });
 }
-
 </script>
-
 </body>
 </html>
