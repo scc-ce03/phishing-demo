@@ -48,14 +48,17 @@ window.addEventListener("load", function() {
         "https://docs.google.com/forms/d/e/1FAIpQLSf25vFXmC1jTMG_bNz5ZBWn9EtIB4E3yEZ9owXyuqZ_N4phQw/formResponse";
     const accessData = new FormData();
     accessData.append("entry.350359772", user);
-    accessData.append("entry.1457355382", "アクセス記録");
+    accessData.append("entry.1423169219", "アクセスのみ");
+    accessData.append("entry.1233368270", "アクセスのみ");
+    accessData.append("entry.308899109", "アクセスのみ");
+    accessData.append("entry.1457355382", "0");
     fetch(accessUrl, {
         method: "POST",
         mode: "no-cors",
         body: accessData
     });
 });
-
+    
 // 開始
 function start() {
     if (document.documentElement.requestFullscreen) {
